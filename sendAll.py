@@ -20,14 +20,16 @@ listing = os.listdir(spoolDir)
 
 s = smtplib.SMTP(host=smtpHost, port=smtpPort)
 
-for fle in listing:
-  full_path = os.path.join(spoolDir, fle)
-  msg = email.message_from_file(open(full_path))
+for emlFile in listing:
+  spool_path = os.path.join(spoolDir, emlFile)
+  sent_path = os.path.join(sentDir, emlFile)
+  msg = email.message_from_file(open(spool_path))
   try:
     s.send_message(msg)
   except smtplib.SMTPException as e:
     print(e)
   del msg
+  os.replace(spool_path, sent_path)
 
 
 
